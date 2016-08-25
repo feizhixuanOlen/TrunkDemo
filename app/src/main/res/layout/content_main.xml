@@ -13,8 +13,43 @@
     tools:showIn="@layout/activity_main"
     tools:context="mobile.alibaba.olen.com.trunk.MainActivity">
 
-    <TextView
-        android:text="Hello World!"
+    <TextView android:id="@+id/frist_text"
+        android:text="FristActivity!"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <Button android:id="@+id/to_secondary_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="to_secondary_activity"
+        android:layout_below="@+id/frist_text"
+        android:layout_marginTop="4dp"/>
+
+    <Button android:id="@+id/star_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="star_service"
+        android:layout_below="@+id/to_secondary_activity"
+        android:layout_marginTop="4dp"/>
+
+    <Button android:id="@+id/stop_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="stop_service"
+        android:layout_below="@+id/star_service"
+        android:layout_marginTop="4dp"/>
+
+    <Button android:id="@+id/bind_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bind_service"
+        android:layout_below="@+id/stop_service"
+        android:layout_marginTop="4dp"/>
+
+    <Button android:id="@+id/unbind_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="unbind_service"
+        android:layout_below="@+id/bind_service"
+        android:layout_marginTop="4dp"/>
 </RelativeLayout>
