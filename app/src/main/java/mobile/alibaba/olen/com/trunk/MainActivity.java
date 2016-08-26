@@ -1,15 +1,20 @@
 package mobile.alibaba.olen.com.trunk;
 
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.os.PersistableBundle;
 import android.os.Process;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,11 +22,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.os.RemoteException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "MainActivity";
-    private MyService.MyBinder myBinder;
+//    private MyService.MyBinder myBinder;
     private MyAIDLService myAIDLService;
 
     @Override
@@ -31,21 +37,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         Log.i(TAG, "onCreat");
         Log.d("TAG", "process id is " + Process.myPid());
 
         initView();
-        Handler handler = new Handler();
-        handler.sendMessage()
+
+//        String str = "123";
+//        String str1 = new String("123");
+//        int i = 123;
+//        User user = new User();
+//        Log.i("zhangxl", "str 111 : " + str);
+//        Log.i("zhangxl", "i 111 : " + i);
+//        Log.i("zhangxl", "user 111 : " + user.getUserId());
+//
+//        toStr(str, user, i);
+//
+//        Log.i("zhangxl", "str 222 : " + str);
+//        Log.i("zhangxl", "user 222 : " + user.getUserId());
+
     }
+//
+//    private void toStr(String str, User user, int i) {
+//
+//        str ="345";
+//        i = 345;
+//        user.setUserId("def");
+//
+//        Log.i("zhangxl", "toStr str : " + str);
+//        Log.i("zhangxl", "toStr i : " + i);
+//        Log.i("zhangxl", "toStr user : " + user.getUserId());
+//    }
+
+//    class User {
+//
+//        String userId = "abc";
+//
+//        public String getUserId() {
+//            return userId;
+//        }
+//
+//        public void setUserId(String userId) {
+//            this.userId = userId;
+//        }
+//    }
 
     private void initView() {
 
@@ -61,6 +96,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bind_service.setOnClickListener(this);
         unbind_service.setOnClickListener(this);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+//                                Dialog dialog = new AlertDialog.Builder(MainActivity.this);
+                                Dialog alertDialog = new AlertDialog.Builder(MainActivity.this).
+                                        setTitle("对话框的标题").
+                                        setMessage("对话框的内容").
+                                        setIcon(R.mipmap.ic_launcher).
+                                        create();
+                                alertDialog.show();
+                            }
+                        }).show();
+            }
+        });
 
     }
 
@@ -90,7 +144,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.to_secondary_activity:
-
+                Intent intent = new Intent(this, SecondaryActivity.class);
+                startActivity(intent);
+                finish();
                 break;
 
             case R.id.star_service:
@@ -101,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.stop_service:
                 Intent stopIntent = new Intent(this, MyService.class);
                 stopService(stopIntent);
-
-
                 break;
 
             case R.id.bind_service:
@@ -111,7 +165,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.unbind_service:
-
+                try {
+                    unbindService(connection);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -174,18 +232,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.i(TAG, "onServiceConnected");
-            myBinder = (MyService.MyBinder) service;
-            myBinder.todo();
+//            myBinder = (MyService.MyBinder) service;
+//            myBinder.todo();
 
-//            myAIDLService = MyAIDLService.Stub.asInterface(service);
-//            try {
-//                int result = myAIDLService.plus(3, 5);
-//                String upperStr = myAIDLService.toUpperCase("hello world");
-//                Log.d("TAG", "result is " + result);
-//                Log.d("TAG", "upperStr is " + upperStr);
-//            } catch (RemoteException e) {
-//                e.printStackTrace();
-//            }
+            myAIDLService = MyAIDLService.Stub.asInterface(service);
+            try {
+                int result = myAIDLService.plus(3, 5);
+                String upperStr = myAIDLService.toUpperCase("hello world");
+                Log.d("TAG", "result is " + result);
+                Log.d("TAG", "upperStr is " + upperStr);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
 
         }
     };

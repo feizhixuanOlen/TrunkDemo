@@ -7,13 +7,14 @@ import android.os.IBinder;
 import android.os.Process;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.os.RemoteException;
 
 /**
  * Created by zhangxl on 16/8/26.
  */
 public class MyService extends Service {
     public static final String TAG = "MyService";
-    private MyBinder mBinder = new MyBinder();
+//    private MyBinder mBinder = new MyBinder();
 
 
     @Override
@@ -70,28 +71,28 @@ public class MyService extends Service {
         super.onDestroy();
     }
 
-    class MyBinder extends Binder {
+//    class MyBinder extends Binder {
+//
+//        public void todo() {
+//            Log.d("TAG", "MyBinder_todo executed");
+//            // 执行具体的下载任务
+//        }
+//    }
 
-        public void todo() {
-            Log.d("TAG", "MyBinder_todo executed");
-            // 执行具体的下载任务
+    MyAIDLService.Stub mBinder = new MyAIDLService.Stub() {
+
+        @Override
+        public String toUpperCase(String str) throws RemoteException {
+            if (str != null) {
+                return str.toUpperCase();
+            }
+            return null;
         }
-    }
 
-//    MyAIDLService.Stub mBinder = new MyAIDLService.Stub() {
-//
-//        @Override
-//        public String toUpperCase(String str) throws RemoteException {
-//            if (str != null) {
-//                return str.toUpperCase();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public int plus(int a, int b) throws RemoteException {
-//            return a + b;
-//        }
-//    };
+        @Override
+        public int plus(int a, int b) throws RemoteException {
+            return a + b;
+        }
+    };
 
 }
